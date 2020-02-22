@@ -1,10 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import { CssBaseline } from '@material-ui/core';
 import * as serviceWorker from './serviceWorker';
+import { akitaDevtools } from '@datorama/akita';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+akitaDevtools();
+
+ReactDOM.render(
+  <>
+  <CssBaseline />
+  <App />
+  </>
+  , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
