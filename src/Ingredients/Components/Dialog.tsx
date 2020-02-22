@@ -18,6 +18,8 @@ export const Dialog: React.FunctionComponent<IDialogProps> = (props) => {
   const handleClose = () => {
     facade.clearActive();
   }
+
+  console.log(activeIngredient);
   return (
     <MDialog
       open={!isNullOrUndefined(activeIngredient)}
