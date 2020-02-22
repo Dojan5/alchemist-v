@@ -22,16 +22,16 @@ export class IngredientsQuery extends QueryEntity<IngredientsState> {
   getIngredients() {
     return combineLatest(
       this.selectAll(),
-      this.effectsQuery.selectAll({ asObject: true })).pipe(
+      this.effectsQuery.selectAll()).pipe(
         auditTime(0),
         map(([ingredients, effects]) => {
           return ingredients.map((ingredient: Ingredient) => {
             return {
               ...ingredient,
-              primary: effects.map((primary: Effect | ID) => effects[primary as ID]),
-              secondary: effects.map((secondary: Effect | ID) => effects[secondary as ID]),
-              tertiary: effects.map((tertiary: Effect | ID) => effects[tertiary as ID]),
-              quaternary: effects.map((quaternary: Effect | ID) => effects[quaternary as ID])
+              primary: effects.filter(e => e.id === ingredient.primary)[0],
+              secondary: effects.filter(e => e.id === ingredient.secondary)[0],
+              tertiary: effects.filter(e => e.id === ingredient.tertiary)[0],
+              quaternary: effects.filter(e => e.id === ingredient.quaternary)[0]
             }
           })
         })
@@ -40,9 +40,9 @@ export class IngredientsQuery extends QueryEntity<IngredientsState> {
 
   search(q: string) {
     console.log(`Querying for ${q}`);
-    this.ingredients$ = this.selectAll({
-      filterBy: entity => entity.name.includes(q)
-    })
+    // this.ingredients$ = this.selectAll({
+    //   filterBy: entity => entity.name.includes(q)
+    // })
   }
 
   setActive(id: ID) {
