@@ -19,7 +19,7 @@ export class IngredientsFacade {
 
 export const facade = new IngredientsFacade(ingredientsStore, ingredientsQuery);
 
-export type IngredientsHookTuple = [Ingredient[], Ingredient | null, IngredientsFacade];
+export type IngredientsHookTuple = [Ingredient[], Ingredient | null | undefined, IngredientsFacade];
 
 export function useIngredientsHook(): IngredientsHookTuple {
   const [ingredients] = useObservable(facade.ingredients$, []);

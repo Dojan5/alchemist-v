@@ -3,13 +3,13 @@ import { IngredientsStore, IngredientsState, ingredientsStore } from './ingredie
 import { defaultState } from './ingredients.defaultstate';
 import { EffectsQuery, Effect } from '../../Effects/state/';
 import { combineLatest } from 'rxjs';
-import { map, filter, auditTime } from 'rxjs/operators';
+import { map, find, auditTime } from 'rxjs/operators';
 import { effectsQuery } from '../../Effects/state/effects.query';
 import { Ingredient } from './ingredient.model';
 
 export class IngredientsQuery extends QueryEntity<IngredientsState> {
   ingredients$ = this.getIngredients();
-  active$ = this.selectActive();
+  active$ = this.getActiveIngredient();
 
   constructor(protected store: IngredientsStore, private effectsQuery: EffectsQuery) {
     super(store);
@@ -28,14 +28,23 @@ export class IngredientsQuery extends QueryEntity<IngredientsState> {
           return ingredients.map((ingredient: Ingredient) => {
             return {
               ...ingredient,
-              primary: effects.filter(e => e.id === ingredient.primary)[0],
-              secondary: effects.filter(e => e.id === ingredient.secondary)[0],
-              tertiary: effects.filter(e => e.id === ingredient.tertiary)[0],
-              quaternary: effects.filter(e => e.id === ingredient.quaternary)[0]
-            }
-          })
+              primary: effects.find(e => e.id === ingredient.primary) || ingredient.primary,
+              secondary: effects.find(e => e.id === ingredient.secondary) || ingredient.secondary,
+              tertiary: effects.find(e => e.id === ingredient.tertiary) || ingredient.tertiary,
+              quaternary: effects.find(e => e.id === ingredient.quaternary) || ingredient.quaternary,
+            };
+          });
         })
-      )
+      );
+  }
+
+  getActiveIngredient() {
+    return combineLatest(
+      this.selectActiveId(),
+      this.getIngredients()).pipe(
+        auditTime(0),
+        map(([id, ingredients]) => ingredients.find(i => i.id === id))
+      );
   }
 
   search(q: string) {
@@ -55,7 +64,7 @@ export class IngredientsQuery extends QueryEntity<IngredientsState> {
 
   toggleOwned(id: ID) {
     let entity = this.getEntity(id);
-    this.store.update(id, { owned: !entity.owned } );
+    this.store.update(id, { owned: !entity.owned });
   }
 
 }
