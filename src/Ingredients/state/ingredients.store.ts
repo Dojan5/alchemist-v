@@ -1,5 +1,4 @@
 import { EntityState, EntityStore, StoreConfig, HashMap, ID } from '@datorama/akita';
-import { defaultState } from './ingredients.defaultstate';
 import { Ingredient } from './ingredient.model';
 
 export interface IngredientsState extends EntityState<Ingredient> {

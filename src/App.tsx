@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Container, makeStyles, Theme, createStyles } from '@material-ui/core';
 import { useIngredientsHook } from './Ingredients/state/ingredients.facade';
@@ -19,13 +18,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 function App() {
   const classes = useStyles();
-  const [ingredients, activeIngredient, ingredientsFacade] = useIngredientsHook();
-  const [effects, effectsFacade] = useEffectsHook();
+  const [,, ingredientsFacade] = useIngredientsHook();
+  const [, effectsFacade] = useEffectsHook();
 
   React.useEffect(() => {
     effectsFacade.initialiseDefaultState();
     ingredientsFacade.initialiseDefaultState();
-  },[]);
+  },[ingredientsFacade, effectsFacade]);
   
   return (
     <Router>

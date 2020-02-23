@@ -14,6 +14,7 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
 
 export const Dialog: React.FunctionComponent<IDialogProps> = (props) => {
   const [ ingredients, activeIngredient, facade ] = useIngredientsHook();
+  if(isNullOrUndefined(activeIngredient)) return null;
 
   const handleClose = () => {
     facade.clearActive();
@@ -24,7 +25,6 @@ export const Dialog: React.FunctionComponent<IDialogProps> = (props) => {
     <MDialog
       open={!isNullOrUndefined(activeIngredient)}
       TransitionComponent={Transition}
-      keepMounted
       onClose={handleClose}
     >
       <DialogContent>
